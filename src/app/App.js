@@ -10,6 +10,7 @@ import SearchResult from '../components/SearchResult';
 import AlertDismissible from '../components/AlertDismissible';
 
 export default function App() {
+  const API_URL = "https://38mscp-8080.csb.app"
   const [estadosPadrao, setEstadosPadrao] = useState([])
   const [searchCity, setSearchCity] = useState([])
   const [openSearchResult, setOpenSearchResult] = useState(false)
@@ -21,16 +22,16 @@ export default function App() {
   const [message, setMessage] = useState("")
 
   const inicialização = async () => {
-    await axios.post("http://localhost:8080/get-weather").then( (res) => {
+    await axios.post(`${API_URL}/get-weather`).then( (res) => {
       setEstadosPadrao(res.data)
     })
   }
   const getCityWeather = async () =>{
-      await axios.post("http://localhost:8080/get-city-weather", {city: cityField}).then( (res) => {
+      await axios.post(`${API_URL}/get-city-weather`, {city: cityField}).then( (res) => {
         setSearchCity(res.data)
       })
 
-      await axios.post("http://localhost:8080/forecast-next-days", {city: cityField}).then( (res) => {
+      await axios.post(`${API_URL}/forecast-next-days`, {city: cityField}).then( (res) => {
         let list = res.data?.list
         let st = ""
         let tempMaxMinDay = {}
