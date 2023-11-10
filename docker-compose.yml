@@ -1,0 +1,18 @@
+version: "2.23"
+
+services:
+  weather-forecast:
+    build: . #caminho para Dockerfile
+    command: npm run nodemon
+    ports:
+      - 3000:3000
+    restart: always
+    platform: linux/x86_64
+    networks:
+      - web-net
+    volumes:
+      - .:/usr/src/app
+
+networks:
+  web-net:
+    name: web-net

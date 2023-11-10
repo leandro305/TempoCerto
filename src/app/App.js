@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, useWindowDimensions } from 'react-native';
-import { Badge, Button, Form, Row } from 'react-bootstrap';
+import { Badge, Button, Form, Row, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from "./AppStyle"
 import "./App.css"
@@ -10,9 +10,10 @@ import SearchResult from '../components/SearchResult';
 import AlertDismissible from '../components/AlertDismissible';
 
 export default function App() {
-  const API_URL = "https://38mscp-8080.csb.app"
+  const API_URL = "http://localhost:8080"
   const [estadosPadrao, setEstadosPadrao] = useState([])
   const [searchCity, setSearchCity] = useState([])
+  const [regionCode, setRegionCode] = useState("")
   const [openSearchResult, setOpenSearchResult] = useState(false)
   const [cityField, setCityField] = useState("")
   const [diasSemana, setDiasSemana] = useState([])
@@ -20,17 +21,34 @@ export default function App() {
   const [alertDismissible, setAlertDismissible] = useState(false)
   const [messageTitle, setMessageTitle] = useState("")
   const [message, setMessage] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const inicialização = async () => {
+    setLoading(true)
     await axios.post(`${API_URL}/get-weather`).then( (res) => {
       setEstadosPadrao(res.data)
+      setLoading(false)
     })
   }
-  const getCityWeather = async () =>{
-      await axios.post(`${API_URL}/get-city-weather`, {city: cityField}).then( (res) => {
+
+  const getCityWeather = async () => {
+      
+      // Para configuração do spinner
+      setLoading(true)
+      setRegionCode("")
+      await axios.post(`${API_URL}/get-city-weather`, {city: cityField}).then( async (res) => {
         setSearchCity(res.data)
+        
+        let position = { lat: parseFloat(res.data.city.coord.lat), lng: parseFloat(res.data.city.coord.lon) }
+        await axios.post(`${API_URL}/reverse-geocoding`, position).then(async (res) => {
+          setRegionCode(res.data.data[0].region_code)
+          setLoading(false)
+        })
       })
 
+      // Para configuração do spinner
+      setLoading(true)
+      setDiasSemana([])
       await axios.post(`${API_URL}/forecast-next-days`, {city: cityField}).then( (res) => {
         let list = res.data?.list
         let st = ""
@@ -66,7 +84,16 @@ export default function App() {
         }
 
         setDiasSemana(diasSemana)
+        setLoading(false)
       })
+  }
+
+  const loadingScreen = () => {
+    return (
+      <>
+        <Spinner animation="grow" variant="warning" />
+      </>
+    );
   }
 
   const obterTempMaxMinAtualizada = (list) => {
@@ -117,7 +144,7 @@ export default function App() {
     if (estadosPadrao.length === 0) {
       inicialização()
     }
-  })
+  }, [estadosPadrao])
 
   return (
     <View style={styles.container}>
@@ -128,7 +155,7 @@ export default function App() {
             <b>Previsão do <Badge bg="warning">Tempo</Badge></b>
         </h1>
 
-        <SearchResult searchCity={searchCity} openSearchResult={openSearchResult} esconderOpenSearchResult={esconderOpenSearchResult}  diasSemana={diasSemana} window={window}/>
+        <SearchResult loading={loading} loadingScreen={loadingScreen} searchCity={searchCity} regionCode={regionCode} openSearchResult={openSearchResult} esconderOpenSearchResult={esconderOpenSearchResult}  diasSemana={diasSemana} window={window}/> 
 
         <AlertDismissible show={alertDismissible} setShow={setAlertDismissible} messageTitle={messageTitle} message={message} />
 
@@ -144,12 +171,35 @@ export default function App() {
                 required={true}
                 onChange={(e) => { setCityField(e.target.value) }}
             />
-            <Button size='sm' className='btn btn-light' variant="" aria-controls='div-search-result' aria-expanded={openSearchResult} onClick={() => { if (cityField !== "") { getCityWeather(); mostraOpenSearchResult(); }else { setAlertDismissible(true); setMessageTitle("Erro:"); setMessage("O campo não pode ficar vazio!"); setOpenSearchResult(false)  } }}>Procurar</Button>
+            <Button style={styles.searchButton} size='sm' className='btn btn-light' variant="primary" aria-controls='div-search-result' aria-expanded={openSearchResult} onClick={() => { if (cityField !== "") { getCityWeather(); mostraOpenSearchResult(); }else { setAlertDismissible(true); setMessageTitle("Erro:"); setMessage("O campo não pode ficar vazio!"); setOpenSearchResult(false)  } }} disabled={(estadosPadrao.length === 0 && loading === true) ? `disabled` : null}>
+              {(estadosPadrao.length === 0 && loading === true)
+              ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="grow"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  Loading...
+                </>
+              )
+              :
+              (<>Procurar</>)
+              }
+            </Button>
         </Form>
         
         <hr style={styles.hr}/>
         
         <h2 style={styles.h2}>Capitais</h2>
+        
+        <div style={styles.divLoadingScreen}>
+          { 
+            (estadosPadrao.length === 0 && loading === true) ? loadingScreen() : null
+          }
+        </div>
         
         <div style={styles.parentList}>
           <Row xs={1} md={2}>

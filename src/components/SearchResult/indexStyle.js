@@ -45,5 +45,10 @@ export default StyleSheet.create({
         overflow: "auto",
         flexWrap: 'unset',
         marginRight:0
+    },
+
+    divLoadingScreen: {
+        marginTop:"10px",
+        textAlign:"center"
     }
 });

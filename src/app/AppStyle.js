@@ -46,5 +46,12 @@ export default StyleSheet.create({
 
     campoPesquisa: {
         // width:"15rem"
+    },
+    divLoadingScreen: {
+        marginTop:"10px",
+        textAlign:"center"
+    },
+    searchButton:{
+        whiteSpace:"nowrap"
     }
 });

@@ -2,7 +2,7 @@ import { ArrowUp, ArrowDown } from "react-bootstrap-icons"
 import styles from "./indexStyle"
 import { CloseButton, Collapse, Row, Col } from "react-bootstrap"
 
-const SearchResult = ({openSearchResult, esconderOpenSearchResult, searchCity, diasSemana, window}) => {
+const SearchResult = ({loading, loadingScreen, openSearchResult, esconderOpenSearchResult, searchCity, regionCode, diasSemana, window}) => {
     const toAllUppercase = (phrase) => {
       const spPhrase = phrase.split(" ")
       for (let i = 0; i < spPhrase.length; i++) {
@@ -42,52 +42,78 @@ const SearchResult = ({openSearchResult, esconderOpenSearchResult, searchCity, d
       })
       return ds
     }
-
+    
     return (
       <Collapse in={openSearchResult} style={styles.divSearchResult}>
       <div id="div-search-result">
-        <div style={styles.divSearchTitle}>
-        {name}, RR - {searchCity?.city?.country} 
-        </div>
+        { (regionCode === "" && loading === true)
+        ? (
+          <>
+            <div style={styles.divLoadingScreen}>
+              {loadingScreen()}
+            </div>
+          </>
+        )
+        : (
+          <>
+            <div style={styles.divSearchTitle}>
+            {name}, {regionCode} - {searchCity?.city?.country} 
+            </div>
 
-        <div style={styles.divSearchBtnClose}>
-          <CloseButton onClick={() => { esconderOpenSearchResult() }}/>
-        </div>
+            <div style={styles.divSearchBtnClose}>
+              <CloseButton onClick={() => { esconderOpenSearchResult() }}/>
+            </div>
 
-        <br/>
+            <br/>
 
-        <div>
-          <h1 style={styles.titleDegreeDescriptions}>{searchCity?.list ? parseInt(searchCity?.list[0]?.temp?.day) : null }°C {description} </h1>
-        </div>
+            <div>
+              <h1 style={styles.titleDegreeDescriptions}>{searchCity?.list ? parseInt(searchCity?.list[0]?.temp?.day) : null }°C {description} </h1>
+            </div>
 
-        <Row style={styles.margBottMob}>
-          <Col sm={2} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
-            <ArrowUp color="#ff7f00"/>
-            {searchCity?.list ? parseInt( searchCity?.list[0]?.temp?.max) : null}°
-          </Col>
-          <Col sm={2} style={(window.width <= 764) ? styles.resultSeachColsMob: null}>
-            <ArrowDown color="#0074AD"/>
-            {searchCity?.list ? parseInt( searchCity?.list[0]?.temp?.min) : null}°
-          </Col>
+            <Row style={styles.margBottMob}>
+              <Col sm={2} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
+                <ArrowUp color="#ff7f00"/>
+                {searchCity?.list ? parseInt( searchCity?.list[0]?.temp?.max) : null}°
+              </Col>
+              <Col sm={2} style={(window.width <= 764) ? styles.resultSeachColsMob: null}>
+                <ArrowDown color="#0074AD"/>
+                {searchCity?.list ? parseInt( searchCity?.list[0]?.temp?.min) : null}°
+              </Col>
 
-          <Col sm={4} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
-            <span style={styles.fontHeigNormal} >Sensação</span> {searchCity?.list ? parseInt( searchCity?.list[0]?.feels_like?.day) : null}°C
-          </Col>
-        </Row>
-        <Row style={styles.margBottMob}>
-          <Col sm={4} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
-            <span style={styles.fontHeigNormal} >Vento</span> {speed}Km/h
-          </Col>
-          <Col sm={4}  style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
-            <span style={styles.fontHeigNormal} >Umidade</span> {searchCity?.list ? parseInt( searchCity?.list[0]?.humidity ) : null}%
-          </Col>
-        </Row>
+              <Col sm={4} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
+                <span style={styles.fontHeigNormal} >Sensação</span> {searchCity?.list ? parseInt( searchCity?.list[0]?.feels_like?.day) : null}°C
+              </Col>
+            </Row>
+            <Row style={styles.margBottMob}>
+              <Col sm={4} style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
+                <span style={styles.fontHeigNormal} >Vento</span> {speed}Km/h
+              </Col>
+              <Col sm={4}  style={(window.width <= 764) ? styles.resultSeachColsMob : null}>
+                <span style={styles.fontHeigNormal} >Umidade</span> {searchCity?.list ? parseInt( searchCity?.list[0]?.humidity ) : null}%
+              </Col>
+            </Row>
+          </>
+        )
+        }
 
         <hr />
 
-        <Row style={(window.width <= 764) ? styles.rowDaysOfTheWeekMob : null}>
-        {renderDiasSemana()}
-        </Row>
+        {(diasSemana.length === 0 && loading === true)
+        ? (
+          <>
+            <div style={styles.divLoadingScreen}>
+                {loadingScreen()}
+            </div>
+          </>
+        )
+        : (
+          <>
+            <Row style={(window.width <= 764) ? styles.rowDaysOfTheWeekMob : null}>
+            {renderDiasSemana()}
+            </Row>
+          </>
+        )
+        }
 
       </div>
       </Collapse>
