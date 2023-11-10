@@ -3,9 +3,11 @@
 - Utiliza API [OpenWeathermap](https://openweathermap.org/) que tem dados de clima de qualquer região
 - Feito com React Native, em conjunto do NodeJS no backend
 - Compativel com sistemas mobile (responsivo)
+- Demostrativo em tempo real no [codesandbox](https://github.com/leandro305/TempoCerto/deployments/activity_log?environment=CodeSandbox+%28start%29)
 
 ## Situação
-- Development 04/11/2023
+- Desenvolvimento 04/11/2023
+- Finalizado 10/11/2023
 
 ## Template Principal
 ![](./assets/repository/template-pc.png)
