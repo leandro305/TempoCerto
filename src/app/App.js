@@ -10,7 +10,7 @@ import SearchResult from '../components/SearchResult';
 import AlertDismissible from '../components/AlertDismissible';
 
 export default function App() {
-  const API_URL = "http://localhost:8080"
+  const API_URL = "https://38mscp-8080.csb.app"
   const [estadosPadrao, setEstadosPadrao] = useState([])
   const [searchCity, setSearchCity] = useState([])
   const [regionCode, setRegionCode] = useState("")
