@@ -15,9 +15,9 @@
 ![](./assets/repository/template-pc-fields-open.png)
 
 ## Mobile (Responsivo)
-![](./assets/repository/template-mob.png)
+<img src="./assets/repository/template-mob.png" width="500">
 
-![](./assets/repository/template-mob-fields-open.png)
+<img src="./assets/repository/template-mob-fields-open.png" width="500">
 
 ## Contato:
 | Integrante | Usuário Git | E-mail para contato |
