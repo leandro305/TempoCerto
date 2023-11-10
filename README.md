@@ -3,7 +3,7 @@
 - Utiliza API [OpenWeathermap](https://openweathermap.org/) que tem dados de clima de qualquer região
 - Feito com React Native, em conjunto do NodeJS no backend
 - Compativel com sistemas mobile (responsivo)
-- Demostrativo em tempo real no [codesandbox](https://github.com/leandro305/TempoCerto/deployments/activity_log?environment=CodeSandbox+%28start%29)
+- Demostrativo em tempo real no [codesandbox](https://codesandbox.io/p/devtool/preview/leandro305/TempoCerto/draft/condescending-austin?task=start&port=3000&redirect=true&utm_source=gh_app)
 
 ## Situação
 - Desenvolvimento 04/11/2023
