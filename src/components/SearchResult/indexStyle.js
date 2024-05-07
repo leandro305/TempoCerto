@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     divSearchResult: {
         padding:"16px",
-        backgroundColor:"#fff",
+        backgroundColor:"#e0e0e0",
         fontWeight:"bold",
         color:"#5b6266"
     },
@@ -49,6 +49,9 @@ export default StyleSheet.create({
 
     divLoadingScreen: {
         marginTop:"10px",
+        textAlign:"center"
+    },
+    nextDaysColumn: {
         textAlign:"center"
     }
 });

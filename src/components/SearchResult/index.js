@@ -2,7 +2,7 @@ import { ArrowUp, ArrowDown } from "react-bootstrap-icons"
 import styles from "./indexStyle"
 import { CloseButton, Collapse, Row, Col } from "react-bootstrap"
 
-const SearchResult = ({loading, loadingScreen, openSearchResult, esconderOpenSearchResult, searchCity, regionCode, diasSemana, window}) => {
+const SearchResult = ({loading, loadingScreen, openSearchResult, esconderOpenSearchResult, searchCity, regionCode, diasSemana, window, nextDaysIcons}) => {
     const toAllUppercase = (phrase) => {
       const spPhrase = phrase.split(" ")
       for (let i = 0; i < spPhrase.length; i++) {
@@ -33,8 +33,10 @@ const SearchResult = ({loading, loadingScreen, openSearchResult, esconderOpenSea
     const renderDiasSemana = () => {
       let ds = diasSemana.map((dia, k) => {
         return (
-          <Col key={k}>
-          {obterDiaSemana(dia?.dt_txt.split(" ")[0])}<br/>
+          <Col style={styles.nextDaysColumn} key={k}>
+          {obterDiaSemana(dia?.dt_txt.split(" ")[0])}
+          <br/>
+          <img src={`https://openweathermap.org/img/wn/${nextDaysIcons[k]}.png`} />
           <span style={styles.minMaxDiasSemana}>{parseInt(dia?.main?.temp_max)}°</span>
           <span style={styles.minMaxDiasSemana}>{parseInt(dia?.main?.temp_min)}°</span>
           </Col>

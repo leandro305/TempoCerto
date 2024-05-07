@@ -22,8 +22,12 @@ export default function App() {
   const [messageTitle, setMessageTitle] = useState("")
   const [message, setMessage] = useState("")
   const [loading, setLoading] = useState(false)
+  const [nextDaysIcons, setNextDaysIcons] = useState([])
 
   const inicialização = async () => {
+
+    // <div dangerouslySetInnerHTML={}/>
+
     setLoading(true)
     await axios.post(`${API_URL}/get-weather`).then( (res) => {
       setEstadosPadrao(res.data)
@@ -32,7 +36,6 @@ export default function App() {
   }
 
   const getCityWeather = async () => {
-      
       // Para configuração do spinner
       setLoading(true)
       setRegionCode("")
@@ -49,23 +52,45 @@ export default function App() {
       // Para configuração do spinner
       setLoading(true)
       setDiasSemana([])
-      await axios.post(`${API_URL}/forecast-next-days`, {city: cityField}).then( (res) => {
+      await axios.post(`${API_URL}/forecast-next-days`, {city: cityField}).then( async (res) => {
+        //Buscar pelos Ícones dos dias seguintes
         let list = res.data?.list
+        let iconsList = []
+
+        for (let x = 0; x < list.length; x++) {
+          if (list[x].dt_txt.split(" ")[1] === "12:00:00") {
+            iconsList.push(list[x].weather[0].icon)
+          }
+        }
+        if (iconsList.length === 4) {
+          iconsList.push(list[list.length-1].weather[0].icon)
+        }
+        if (iconsList.length === 5) {
+          iconsList.push(list[list.length-1].weather[0].icon)
+        }
+
+        setNextDaysIcons(iconsList)
+
         let st = ""
         let tempMaxMinDay = {}
         let diasSemana = []
 
+        // Para pegar data atual no formato yyyy-mm-dd
+        let data = new Date();
+        let day = String(data.getDate()).padStart(2, '0');
+        let month = String(data.getMonth() + 1).padStart(2, '0');
+        let year = data.getFullYear();
+        let currentDate = year + '-' + month + '-' + day;
+
         //Remover o primeiro dia que é o dia de hj pq não vou precisar dele
         for (let x=0; x < list.length; x++) {
-          if (new Date().toISOString().split("T")[0] === list[x]?.dt_txt.split(" ")[0]) {
+          if (currentDate === list[x]?.dt_txt.split(" ")[0]) {
             list[x] = ''
           }
         }
         list = list.filter((i) => { return i })
 
         tempMaxMinDay = obterTempMaxMinAtualizada(list)
-
-        // console.log(tempMaxMinDay)
 
         let y = 0
         st = ""
@@ -116,8 +141,6 @@ export default function App() {
       st = list[x]?.dt_txt.split(" ")[0]
     }
     maxsDay.shift(); //Remove o vazio no indice 0
-
-    // console.log(maxsDay)
     
     // Finaliza a separação da temp. max e min de todos os dias que vierem de 'list'
     for (let x=0; x < maxsDay.length; x++) {
@@ -155,7 +178,7 @@ export default function App() {
             <b>Previsão do <Badge bg="warning">Tempo</Badge></b>
         </h1>
 
-        <SearchResult loading={loading} loadingScreen={loadingScreen} searchCity={searchCity} regionCode={regionCode} openSearchResult={openSearchResult} esconderOpenSearchResult={esconderOpenSearchResult}  diasSemana={diasSemana} window={window}/> 
+        <SearchResult loading={loading} loadingScreen={loadingScreen} searchCity={searchCity} regionCode={regionCode} openSearchResult={openSearchResult} esconderOpenSearchResult={esconderOpenSearchResult}  diasSemana={diasSemana} window={window} nextDaysIcons={nextDaysIcons}/> 
 
         <AlertDismissible show={alertDismissible} setShow={setAlertDismissible} messageTitle={messageTitle} message={message} />
 
@@ -207,6 +230,10 @@ export default function App() {
               return (<StateCard estado={estado} key={index} window={window}/>)
             }) : null}
           </Row>
+        </div>
+
+        <div style={styles.footer}>
+        © 2024 Copyright: <a href='https://www.linkedin.com/in/leandro-lobo-055b3918a/'>Leandro Lobo</a>
         </div>
 
       </View>

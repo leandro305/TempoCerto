@@ -3,7 +3,6 @@ import { StyleSheet } from "react-native";
 export default StyleSheet.create({
     container: {
         width:"100%",
-        height:"900px",
         marginTop:10,
         display:"flex",
         flexDirection:"row",
@@ -51,7 +50,13 @@ export default StyleSheet.create({
         marginTop:"10px",
         textAlign:"center"
     },
-    searchButton:{
+    searchButton: {
         whiteSpace:"nowrap"
+    },
+
+    footer: {
+        textAlign:"center",
+        backgroundColor:'rgba(0, 0, 0, 0.2)',
+        marginTop: '300px'
     }
 });
