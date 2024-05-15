@@ -17,7 +17,7 @@
 ## Mobile (Responsivo)
 <img src="./assets/repository/template-mob.png" width="500">
 
-<img src="./assets/repository/template-mob-fields-open.png" width="500">
+<img src="./assets/repository/template-mob-fields-open.jpeg" width="500">
 
 ## Contato:
 | Integrante | Usuário Git | E-mail para contato |
